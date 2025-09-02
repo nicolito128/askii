@@ -4,11 +4,22 @@ import (
 	"flag"
 	"fmt"
 	"image"
+	"image/color"
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 	"os"
 )
+
+const resetColor = "\x1b[0m"
+
+func truecolor(c color.Color) string {
+	if os.Getenv("NO_COLOR") == "1" {
+		return ""
+	}
+	r, g, b, _ := c.RGBA()
+	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm", r>>8, g>>8, b>>8)
+}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -41,7 +52,8 @@ func main() {
 			gray := (r*30 + g*59 + b*11) / 100
 			gray >>= 8
 			idx := int(gray) * pw / 255
-			fmt.Printf("%c", palette[idx])
+			color := truecolor(img.At(x, y))
+			fmt.Printf("%s%c%s", color, palette[idx], resetColor)
 		}
 		fmt.Println()
 	}
