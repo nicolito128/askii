@@ -81,7 +81,7 @@ func main() {
 		fatalf("Error: failed to decode image: %v\n", err)
 	}
 
-	paletteSize := len(palette)
+	paletteSize := len(palette) - 1
 	rect := img.Bounds()
 
 	if xStep > rect.Dx() {
